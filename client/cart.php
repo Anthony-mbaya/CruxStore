@@ -76,7 +76,7 @@ $content = '
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="../'.htmlspecialchars($item['product']['image_url']).'" alt="Product image" width="60" class="me-3">
+                                    <img src="'.htmlspecialchars($item['product']['image_url']).'" alt="Product image" width="60" class="me-3">
                                     <div>
                                         <h6 class="mb-0">'.htmlspecialchars($item['product']['name']).'</h6>
                                         <small class="text-muted">'.htmlspecialchars($item['product']['category']).'</small>

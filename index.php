@@ -1,76 +1,172 @@
 <?php
 require_once 'includes/db.php';
-#require_once 'includes/main_template.php';
 
 $pageTitle = "Home";
 $content = '
-<section class="hero-section mb-5">
+
+<!-- HERO SECTION -->
+<section class="container py-5">
     <div class="row align-items-center">
-        <div class="col-md-6 px-3 text-center">
-            <a href="login.php" class="btn btn-success btn-lg">Sign In!</a>
-            <h1 class="display-4">Purchase Your Products</h1>
-            <p class="lead">Discover premium products tailored to your style and budget.</p>
-            <a href="register.php" class="btn btn-primary btn-lg">Get Started</a>
+        <div class="col-md-6 text-center text-md-start">
+            <h1 class="display-4 fw-bold mb-3">Welcome to <span class="text-primary">CruxStore</span></h1>
+            <p class="lead mb-4">
+                Your one-stop shop for premium electronics and durable everyday products.
+                From wireless earbuds to smart gadgets — quality meets affordability.
+            </p>
+
+            <div class="d-flex gap-3 justify-content-center justify-content-md-start">
+                <a href="register.php" class="btn btn-primary btn-lg px-4">Get Started</a>
+                <a href="login.php" class="btn btn-outline-success btn-lg px-4">Sign In</a>
+            </div>
         </div>
-        <div class="col-md-6">
-            <img src="assets/images/landing1.jpg" alt="Luxury page" class="img-fluid rounded">
+
+        <div class="col-md-6 text-center mt-4 mt-md-0">
+            <img src="client/assets/images/landing/landing1.avif" alt="CruxStore Products" class="img-fluid rounded shadow">
         </div>
     </div>
 </section>
 
-<section class="features-section">
-    <h2 class="text-center mb-4">Why Choose CruxStore</h2>
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Virtual Product Selection</h5>
-                    <p class="card-text">Browse our extensive catalog online and visualize products in your space.</p>
-                </div>
+<!-- FEATURE HIGHLIGHT STRIP -->
+<section class="bg-light py-4">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>⚡ Fast Delivery</h5>
+                <p class="small">Quick and reliable shipping</p>
             </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Expert Consultation</h5>
-                    <p class="card-text">Our products experts will guide you to create your perfect space.</p>
-                </div>
+            <div class="col-md-3">
+                <h5>🔒 Secure Payments</h5>
+                <p class="small">M-Pesa & PayPal supported</p>
             </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Secure Payments</h5>
-                    <p class="card-text">Safe and convenient payment options including M-Pesa and PayPal.</p>
-                </div>
+            <div class="col-md-3">
+                <h5>💯 Quality Products</h5>
+                <p class="small">Tested and trusted items</p>
             </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Reducing Wait Times and Queuing</h5>
-                    <p class="card-text">By enabling customers to browse products options and make payments online, the system will reduce the need for physical visits.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Minimizing Decision Fatigue</h5>
-                    <p class="card-text">The system will help reduce customer confusion by offering a curated set of products types online.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Efficient Customer Data Retrieval</h5>
-                    <p class="card-text">When new products are received, they will be automatically recorded into the inventory, making stock-taking more efficient.</p>
-                </div>
+            <div class="col-md-3">
+                <h5>📦 Easy Returns</h5>
+                <p class="small">Hassle-free return policy</p>
             </div>
         </div>
     </div>
 </section>
+
+<!-- PRODUCTS SECTION -->
+<section class="container py-5">
+    <h2 class="text-center mb-4">Popular Categories</h2>
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <img src="client/assets/images/landing/earpods.webp" class="card-img-top" alt="Earpods">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Wireless Earpods</h5>
+                    <p class="card-text">High-quality sound with noise cancellation and long battery life.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <img src="client/assets/images/landing/smartwatches.avif" class="card-img-top" alt="Smart Watch">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Smart Watches</h5>
+                    <p class="card-text">Track fitness, notifications, and health in style.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <img src="client/assets/images/landing/accessories.avif" class="card-img-top" alt="Accessories">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Accessories</h5>
+                    <p class="card-text">Chargers, cables, power banks, and more essentials.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- NON-PERISHABLE SUGGESTIONS -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">More You Can Shop</h2>
+        <div class="row text-center">
+
+            <div class="col-md-3">
+                <h6>🔌 Power Banks</h6>
+            </div>
+            <div class="col-md-3">
+                <h6>🎧 Headphones</h6>
+            </div>
+            <div class="col-md-3">
+                <h6>💡 LED Lighting</h6>
+            </div>
+            <div class="col-md-3">
+                <h6>⌨️ Computer Accessories</h6>
+            </div>
+            <div class="col-md-3">
+                <h6>📱 Phone Cases</h6>
+            </div>
+            <div class="col-md-3">
+                <h6>🔋 Batteries</h6>
+            </div>
+            <div class="col-md-3">
+                <h6>📷 Camera Accessories</h6>
+            </div>
+            <div class="col-md-3">
+                <h6>🎮 Gaming Accessories</h6>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="container py-5">
+    <h2 class="text-center mb-4">Why Choose CruxStore</h2>
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Smart Shopping Experience</h5>
+                    <p class="card-text">Browse, compare, and purchase products easily from anywhere.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Curated Product Selection</h5>
+                    <p class="card-text">We reduce decision fatigue by offering only high-quality items.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Efficient Inventory System</h5>
+                    <p class="card-text">Real-time stock updates ensure product availability accuracy.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="bg-primary text-white text-center py-5">
+    <div class="container">
+        <h2>Ready to Start Shopping?</h2>
+        <p class="mb-4">Join CruxStore today and experience seamless online shopping.</p>
+        <a href="register.php" class="btn btn-light btn-lg">Create Account</a>
+    </div>
+</section>
+
 ';
 
 include 'includes/main_template.php';

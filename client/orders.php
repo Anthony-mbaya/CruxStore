@@ -101,7 +101,7 @@ $content = '
                     // Track button (only show if delivery exists and is in progress)
                     $trackButton = '';
                     if ($order['delivery_id'] && in_array($order['delivery_status'], ['assigned', 'picked_up', 'in_transit'])) {
-                        $trackButton = '<a href="../delivery/delivery.php?id='.$order['delivery_id'].'" class="btn btn-sm btn-outline-primary">Track</a>';
+                        $trackButton = '<a href="delivery.php?id='.$order['delivery_id'].'" class="btn btn-sm btn-outline-primary">Track</a>';
                     }
 
                     return $carry.'
