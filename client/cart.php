@@ -11,16 +11,34 @@ $pageTitle = "Your Shopping Cart";
 
 // Handle cart updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     if (isset($_POST['update_cart'])) {
+
         foreach ($_POST['quantities'] as $product_id => $quantity) {
+
             if ($quantity <= 0) {
                 unset($_SESSION['cart'][$product_id]);
+
+                // DELETE from DB
+                $stmt = $pdo->prepare("DELETE FROM cart WHERE user_id = ? AND product_id = ?");
+                $stmt->execute([$_SESSION['user_id'], $product_id]);
+
             } else {
                 $_SESSION['cart'][$product_id] = $quantity;
+
+                // INSERT or UPDATE in DB
+                $stmt = $pdo->prepare("
+                    INSERT INTO cart (user_id, product_id, quantity)
+                    VALUES (?, ?, ?)
+                    ON DUPLICATE KEY UPDATE quantity = VALUES(quantity)
+                ");
+                $stmt->execute([$_SESSION['user_id'], $product_id, $quantity]);
             }
         }
+
         $_SESSION['message'] = "Cart updated!";
         $_SESSION['msg_type'] = "success";
+
     } elseif (isset($_POST['checkout'])) {
         header("Location: checkout.php");
         exit();
@@ -30,12 +48,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Get cart items with product details
 $cartItems = [];
 $total = 0;
+if (empty($_SESSION['cart'])) {
+    $stmt = $pdo->prepare("SELECT product_id, quantity FROM cart WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
 
+    foreach ($stmt->fetchAll() as $item) {
+        $_SESSION['cart'][$item['product_id']] = $item['quantity'];
+    }
+}
 if (!empty($_SESSION['cart'])) {
     $placeholders = implode(',', array_fill(0, count($_SESSION['cart']), '?'));
     $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id IN ($placeholders)");
+    //$stmt->execute([$_SESSION['user_id']]);
     $stmt->execute(array_keys($_SESSION['cart']));
     $products = $stmt->fetchAll();
+
 
     foreach ($products as $product) {
         $quantity = $_SESSION['cart'][$product['product_id']];
@@ -52,7 +79,7 @@ if (!empty($_SESSION['cart'])) {
 
 $content = '
 <div class="container py-5">
-    <h2 class="mb-4">Your Shopping Cart</h2>
+    <h2 class="mb-4 ">Your Shopping Cart</h2>
 
     '.((empty($cartItems)) ? '
     <div class="alert alert-info">
@@ -76,7 +103,7 @@ $content = '
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="'.htmlspecialchars($item['product']['image_url']).'" alt="Product image" width="60" class="me-3">
+                                    <img src="../'.htmlspecialchars($item['product']['image_url']).'" alt="Product image" width="60" class="me-3">
                                     <div>
                                         <h6 class="mb-0">'.htmlspecialchars($item['product']['name']).'</h6>
                                         <small class="text-muted">'.htmlspecialchars($item['product']['category']).'</small>
@@ -115,4 +142,3 @@ $content = '
 </div>';
 
 include '../includes/main_template.php';
-?>

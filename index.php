@@ -21,7 +21,7 @@ $content = '
         </div>
 
         <div class="col-md-6 text-center mt-4 mt-md-0">
-            <img src="client/assets/images/landing/landing1.avif" alt="CruxStore Products" class="img-fluid rounded shadow">
+            <img src="assets/images/landing/landing1.avif" alt="CruxStore Products" class="img-fluid rounded shadow">
         </div>
     </div>
 </section>
@@ -57,7 +57,7 @@ $content = '
 
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
-                <img src="client/assets/images/landing/earpods.webp" class="card-img-top" alt="Earpods">
+                <img src="assets/images/landing/earpods.webp" class="card-img-top" alt="Earpods">
                 <div class="card-body text-center">
                     <h5 class="card-title">Wireless Earpods</h5>
                     <p class="card-text">High-quality sound with noise cancellation and long battery life.</p>
@@ -67,7 +67,7 @@ $content = '
 
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
-                <img src="client/assets/images/landing/smartwatches.avif" class="card-img-top" alt="Smart Watch">
+                <img src="assets/images/landing/smartwatches.avif" class="card-img-top" alt="Smart Watch">
                 <div class="card-body text-center">
                     <h5 class="card-title">Smart Watches</h5>
                     <p class="card-text">Track fitness, notifications, and health in style.</p>
@@ -77,7 +77,7 @@ $content = '
 
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
-                <img src="client/assets/images/landing/accessories.avif" class="card-img-top" alt="Accessories">
+                <img src="assets/images/landing/accessories.avif" class="card-img-top" alt="Accessories">
                 <div class="card-body text-center">
                     <h5 class="card-title">Accessories</h5>
                     <p class="card-text">Chargers, cables, power banks, and more essentials.</p>

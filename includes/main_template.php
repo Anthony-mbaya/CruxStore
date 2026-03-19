@@ -18,7 +18,8 @@ require_once 'auth.php';
 <div class="container py-3">
 
     <!-- MODERN NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-light rounded-2 shadow mb-4">
+    <!--<nav class="navbar navbar-expand-lg navbar-dark bg-light rounded-2 shadow mb-4">-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-light rounded-2 shadow mb-4 fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold fs-4 text-primary">CruxStore</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -64,8 +65,8 @@ require_once 'auth.php';
         </div>
     </nav>
 
-    <!-- MAIN CONTENT -->
-    <div class="bg-white p-4 rounded-4 shadow-sm">
+    <!-- MAIN CONTENTnbvj -->
+    <div class="bg-white p-4 rounded-4 shadow-sm mt-5">
 
         <?php if (isset($_SESSION['message'])): ?>
             <div class="alert alert-<?php echo $_SESSION['msg_type']; ?> rounded-3">

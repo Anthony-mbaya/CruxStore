@@ -79,10 +79,11 @@ if (isset($response['ResponseCode']) && $response['ResponseCode'] == "0") {
         (order_id, payment_method, amount, transaction_id, status)
         VALUES (?, 'mpesa', ?, ?, 'pending')");
     $stmt->execute([$order_id, $order['total_amount'], $response['CheckoutRequestID']]);
-
+    
     $_SESSION['message'] = "M-Pesa payment initiated! Complete the prompt on your phone.";
     header("Location: ../client/order_confirmation.php?id=$order_id");
 } else {
-    $_SESSION['message'] = "Payment failed: " . ($response['errorMessage'] ?? 'Unknown error');
+    $_SESSION['message'] = "Payment failed, you either cancelled the transaction or system errors";
+    //$_SESSION['message'] = "Payment failed: " . ($response['errorMessage'] ?? 'Unknown error');
     header("Location: ../client/checkout.php");
 }

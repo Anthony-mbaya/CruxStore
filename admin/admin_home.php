@@ -110,9 +110,9 @@ $content = '
                                     <tr>
                                         <td>#' . $order['order_id'] . '</td>
                                         <td>' . htmlspecialchars($order['username']) . '</td>
-                                        <td>$' . number_format($order['total_amount'], 2) . '</td>
+                                        <td>Ksh.' . number_format($order['total_amount'], 2) . '</td>
                                         <td><span class="badge bg-' . $statusClass . '">' . ucfirst($order['status']) . '</span></td>
-                                        <td><a href="view_order.php?id=' . $order['order_id'] . '" class="btn btn-sm btn-primary">View</a></td>
+                                        <td><a href="orders_page.php?id=' . $order['order_id'] . '" class="btn btn-sm btn-primary">View</a></td>
                                     </tr>
                                     ';
                                 }, '') . '

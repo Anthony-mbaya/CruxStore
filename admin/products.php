@@ -68,7 +68,7 @@ $content = '
                             <th>Image</th>
                             <th>Name</th>
                             <th>Category</th>
-                            <th>Price</th>
+                            <th>Price(Ksh)</th>
                             <th>Stock</th>
                             <th>Actions</th>
                         </tr>
@@ -117,7 +117,7 @@ $content = '
                         <input type="text" class="form-control" id="category" name="category" required>
                     </div>
                     <div class="col-md-4">
-                        <label for="price" class="form-label">Price</label>
+                        <label for="price" class="form-label">Price(Ksh)</label>
                         <input type="number" step="0.01" class="form-control" id="price" name="price" required>
                     </div>
                     <div class="col-md-3">

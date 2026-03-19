@@ -51,6 +51,19 @@ try {
         )
     ");
 
+    //cart items
+    $pdo->exec("
+    CREATE TABLE IF NOT EXISTS cart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    UNIQUE KEY unique_cart (user_id, product_id)
+)");
+
     // Orders
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS orders (

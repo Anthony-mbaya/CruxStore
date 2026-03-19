@@ -37,6 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
         $_SESSION['cart'][$product_id] = $quantity;
     }
 
+     $stmt = $pdo->prepare("
+        INSERT INTO cart (user_id, product_id, quantity)
+        VALUES (?, ?, 1)
+        ON DUPLICATE KEY UPDATE quantity = quantity + 1
+    ");
+    $stmt->execute([$_SESSION['user_id'], $product_id]);
+
     $_SESSION['message'] = "Product added to cart!";
     $_SESSION['msg_type'] = "success";
     header("Location: cart.php");
@@ -47,10 +54,10 @@ $content = '
 <div class="container py-5">
     <div class="row">
         <div class="col-md-6 d-flex justify-content-center">
-            <img src="'.htmlspecialchars($product['image_url']).'"
+            <img src="../'.htmlspecialchars($product['image_url']).'"
             class="img-fluid rounded shadow-lg"
             alt="'.htmlspecialchars($product['name']).'"
-            style="max-width: 100%; height: 400px; object-fit: cover;">
+            style="max-width: 100%; height: 400px; object-fit: cover;" >
         </div>
 
         <div class="col-md-6">

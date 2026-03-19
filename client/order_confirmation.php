@@ -105,7 +105,7 @@ $content = '
     </div>
 
     <div class="text-center mt-4">
-        <a href="products.php" class="btn btn-primary">Continue Shopping</a>
+        <a href="client_home.php" class="btn btn-primary">Continue Shopping</a>
         <a href="orders.php" class="btn btn-outline-secondary ms-2">View Your Orders</a>
     </div>
 </div>';

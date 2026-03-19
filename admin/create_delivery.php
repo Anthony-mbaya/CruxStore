@@ -73,7 +73,7 @@ $content = '
                         <option value="">Choose order...</option>
                         ' . array_reduce($orders, function($carry, $order) {
                             return $carry . '<option value="'.$order['order_id'].'">
-                                Order #'.$order['order_id'].' - $'.number_format($order['total_amount'],2).' ('.
+                                Order #'.$order['order_id'].' - Ksh.'.number_format($order['total_amount'],2).' ('.
                                 htmlspecialchars($order['username']).')
                             </option>';
                         }, '') . '

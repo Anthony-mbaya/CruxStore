@@ -19,6 +19,8 @@ if (isset($_GET['id'])) {
     if ($product && isset($_SESSION['cart'][$product_id])) {
         // Remove the item from cart
         unset($_SESSION['cart'][$product_id]);
+        $stmt = $pdo->prepare("DELETE FROM cart WHERE user_id = ? AND product_id = ?");
+        $stmt->execute([$_SESSION['user_id'], $product_id]);
 
         $_SESSION['message'] = "Item removed from cart successfully!";
         $_SESSION['msg_type'] = "success";

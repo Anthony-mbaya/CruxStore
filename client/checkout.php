@@ -81,13 +81,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
         $pdo->commit();
 
+        // Clear cart
+        unset($_SESSION['cart']);
+        $stmt = $pdo->prepare("DELETE FROM cart WHERE user_id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+
         if ($payment_method === 'mpesa') {
             header("Location: ../payments/mpesa_pay.php?order_id=$order_id&phone=$mpesa_phone");
             exit();
         }
-
-        // Clear cart
-        unset($_SESSION['cart']);
 
         $_SESSION['message'] = "Order placed successfully! Your order ID is #$order_id";
         $_SESSION['msg_type'] = "success";
@@ -112,24 +114,24 @@ $content = '
                     '.((isset($error)) ? '<div class="alert alert-danger">'.$error.'</div>' : '').'
                     <form method="POST" action="../client/checkout.php">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="name" value="'.htmlspecialchars($customer['username']).'" readonly>
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" value="'.htmlspecialchars($customer['username']).'" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" value="'.htmlspecialchars($customer['email']).'" readonly>
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="'.htmlspecialchars($customer['email']).'" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="tel" class="form-control" id="phone" value="'.htmlspecialchars($customer['phone']).'" readonly>
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" value="'.htmlspecialchars($customer['phone']).'" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="delivery_address" class="form-label">Delivery Address</label>
-                            <textarea class="form-control" id="delivery_address" name="delivery_address" rows="6" required></textarea>
+                            <label class="form-label">Delivery Address</label>
+                            <textarea class="form-control" name="delivery_address" rows="6" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="notes" class="form-label">Order Notes (Optional)</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
+                            <label class="form-label">Order Notes (Optional)</label>
+                            <textarea class="form-control" name="notes" rows="4"></textarea>
                         </div>
                 </div>
             </div>
@@ -144,21 +146,15 @@ $content = '
                 </div>
                 <div class="card-body">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" id="mpesa" value="mpesa" checked>
-                        <label class="form-check-label" for="mpesa">
+                        <input class="form-check-input" type="radio" name="payment_method" value="mpesa" checked>
+                        <label class="form-check-label">
                             <img src="../assets/images/payments/mpesa-logo.png" width="80"> (Kenya Only)
                         </label>
-                        <div id="mpesa-details" class="mt-2">
+                        <div class="mt-2">
                             <input type="tel" name="mpesa_phone" class="form-control" placeholder="2547XXXXXXXX">
                         </div>
                     </div>
-                    <div class="form-check mt-3">
-                        <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="paypal">
-                        <label class="form-check-label" for="paypal">
-                            <img src="../assets/images/payments/paypal-logo.png" width="80"> (International)
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-success mt-3 w-100">Complete Payment</button>
+                    <!-- <button type="submit" class="btn btn-success mt-3 w-100">Complete Payment</button> -->
                 </div>
             </div>
 
@@ -192,7 +188,6 @@ $content = '
         </div>
     </div>
 </div>';
-
 
 include '../includes/main_template.php';
 ?>

@@ -31,6 +31,11 @@ $completedStmt = $pdo->prepare("
 $completedStmt->execute([$_SESSION['user_id']]);
 $completedCount = $completedStmt->fetchColumn();
 
+// deliverer status
+$stmt = $pdo->prepare("SELECT is_active FROM deliverers WHERE user_id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$isActive = $stmt->fetchColumn();
+
 $content = '
 <div class="container py-4">
     <div class="row">
@@ -72,7 +77,12 @@ $content = '
                 <div class="card-body">
                     <h5 class="card-title">Quick Actions</h5>
                     <a href="deliverer_update_location.php" class="btn btn-primary w-100 mb-2">Update My Location</a>
-                    <a href="deliverer_availability.php" class="btn btn-outline-secondary w-100 mb-2">Set Availability</a>
+                    <a href="deliverer_availability.php" class="btn btn-outline-secondary w-100 mb-2 d-flex justify-content-around">
+                    Set Availability
+                    <span class="badge rounded bg-'.($isActive ? 'success' : 'danger').'" style="font-size: 1.2rem;">
+                    '.($isActive ? 'Available' : 'Not Available').'
+                </span>
+                    </a>
                 </div>
             </div>
             

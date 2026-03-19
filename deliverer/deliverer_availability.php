@@ -40,10 +40,10 @@ $content = '
     
     <div class="card">
         <div class="card-body text-center">
-            <h5 class="card-title mb-4">Current Status</h5>
+            <h5 class="card-title success mb-4">Current Status</h5>
             
             <div class="mb-4">
-                <span class="badge rounded-pill bg-'.($isActive ? 'success' : 'danger').'" style="font-size: 1.2rem;">
+                <span class="badge rounded bg-'.($isActive ? 'success' : 'danger').'" style="font-size: 1.2rem;">
                     '.($isActive ? 'Available for Deliveries' : 'Not Available').'
                 </span>
             </div>

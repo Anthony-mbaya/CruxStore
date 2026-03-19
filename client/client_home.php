@@ -68,7 +68,7 @@ $content = '
             return $carry.'
             <div class="col">
                 <div class="card h-100">
-                    <img src="'.htmlspecialchars($product['image_url']).'" class="card-img-top" alt="'.htmlspecialchars($product['name']).'" style="height: 200px; object-fit: cover;">
+                    <img src="../'.htmlspecialchars($product['image_url']).'" class="card-img-top" alt="'.htmlspecialchars($product['name']).'" style="height: 350px; object-fit: cover; ">
                     <div class="card-body">
                         <h5 class="card-title">'.htmlspecialchars($product['name']).'</h5>
                         <p class="card-text text-muted">'.htmlspecialchars($product['category']).'</p>
@@ -88,6 +88,8 @@ $content = '
         }, '').'
     </div>
 </div>';
+
+
 
 include '../includes/main_template.php';
 ?>
