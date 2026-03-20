@@ -34,6 +34,7 @@ require_once 'auth.php';
                         <li class="nav-item"><a class="nav-link px-3 text-dark" href="orders.php">My Orders</a></li>
                         <li class="nav-item"><a class="nav-link px-3 text-dark" href="cart.php">Cart</a></li>
                         <li class="nav-item"><span class="nav-link px-3 text-dark fw-bold">Hi, <?php echo htmlspecialchars($_SESSION['username']); ?></span></li>
+                        <li class="nav-item"><a class="nav-link px-3 text-dark" href="customer_profile.php">Profile</a></li>
                         <li class="nav-item"><a class="btn btn-danger px-3 py-2" href="../logout.php">Logout</a></li>
 
                     <?php elseif (isDeliverer()): ?>
