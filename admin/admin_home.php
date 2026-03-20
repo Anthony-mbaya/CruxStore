@@ -36,7 +36,7 @@ $content = '
     <h2 class="my-4">Admin Dashboard</h2>
 
     <!-- Stats Cards -->
-    <div class="row mb-4">
+    <div class="row mb-4 gap-3 gap-lg-0">
         <div class="col-md-3">
             <div class="card text-white bg-primary">
                 <div class="card-body">
@@ -56,12 +56,13 @@ $content = '
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-warning">
+            <div class="card text-white bg-secondary">
                 <div class="card-body">
                     <h5 class="card-title">Deliveries</h5>
-                    <p class="card-text display-4">' . $deliveriesCount . '</p>
-                    <small class="text-white">(' . $activeDeliveriesCount . ' active)</small><br>
+                        <p class="card-text display-4">' . $deliveriesCount . '</p>
+                        
                     <a href="deliveries.php" class="text-white">Manage Deliveries</a>
+                    <small class="text-white">(' . $activeDeliveriesCount . ' active)</small>
                 </div>
             </div>
         </div>
@@ -79,7 +80,7 @@ $content = '
     <!-- Recent Activity Row -->
     <div class="row">
         <!-- Recent Orders -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4 mb-lg-0">
             <div class="card">
                 <div class="card-header">
                     <h5>Recent Orders</h5>
