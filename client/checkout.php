@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     $notes = trim($_POST['notes']);
     $payment_method = $_POST['payment_method'];
     $mpesa_phone = $_POST['mpesa_phone'] ?? null;
-
+    
     try {
         $pdo->beginTransaction();
 
@@ -93,8 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             exit();
         }
 
-        $_SESSION['message'] = "Order placed successfully! Your order ID is #$order_id";
-        $_SESSION['msg_type'] = "success";
+        //$_SESSION['message'] = "Order placed successfully! Your order ID is #$order_id";
+        //$_SESSION['msg_type'] = "success";
         header("Location: order_confirmation.php?id=$order_id");
         exit();
     } catch (Exception $e) {

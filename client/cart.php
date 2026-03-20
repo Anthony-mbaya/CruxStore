@@ -131,13 +131,22 @@ $content = '
             </table>
         </div>
 
-        <div class="d-flex justify-content-between mt-4">
-            <a href="client_home.php" class="btn btn-outline-secondary">Continue Shopping</a>
-            <div>
-                <button type="submit" name="update_cart" class="btn btn-outline-primary me-2">Update Cart</button>
-                <button type="submit" name="checkout" class="btn btn-primary">Proceed to Checkout</button>
-            </div>
-        </div>
+         <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mt-4">
+    
+    <a href="client_home.php" class="btn btn-outline-secondary w-100 w-md-auto">
+        Continue Shopping
+    </a>
+
+    <div class="d-flex flex-column flex-md-row gap-2 w-100 w-md-auto">
+        <button type="submit" name="update_cart" class="btn btn-outline-primary w-100 w-md-auto">
+            Update Cart
+        </button>
+        <button type="submit" name="checkout" class="btn btn-primary w-100 w-md-auto">
+            Proceed to Checkout
+        </button>
+    </div>
+
+</div>
     </form>').'
 </div>';
 
