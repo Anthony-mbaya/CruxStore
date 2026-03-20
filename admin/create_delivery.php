@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_delivery'])) {
 
 // Fetch orders without deliveries
 $orders = $pdo->query("
-    SELECT o.order_id, o.total_amount, u.username
+    SELECT o.order_id, o.total_amount, u.username, o.payment_status
     FROM orders o
     JOIN users u ON o.customer_id = u.user_id
     LEFT JOIN deliveries d ON o.order_id = d.order_id
@@ -45,7 +45,7 @@ $orders = $pdo->query("
 
 // Fetch available deliverers
 $deliverers = $pdo->query("
-    SELECT del.deliverer_id, u.username, del.vehicle_type
+    SELECT del.deliverer_id, u.username, del.vehicle_type, del.is_active
     FROM deliverers del
     JOIN users u ON del.user_id = u.user_id
     WHERE del.is_active = 1
@@ -74,7 +74,7 @@ $content = '
                         ' . array_reduce($orders, function($carry, $order) {
                             return $carry . '<option value="'.$order['order_id'].'">
                                 Order #'.$order['order_id'].' - Ksh.'.number_format($order['total_amount'],2).' ('.
-                                htmlspecialchars($order['username']).')
+                                htmlspecialchars($order['username']).') - '.$order['payment_status'].' 
                             </option>';
                         }, '') . '
                     </select>

@@ -30,7 +30,7 @@ $stmt->execute([$_SESSION['user_id']]);
 $profile = $stmt->fetch();
 
 /* If deliverer profile does not exist, create it */
-if (!$profile['vehicle_type']) {
+if ($profile['vehicle_type'] === null) {
 
     $pdo->prepare("
         INSERT INTO deliverers (user_id, vehicle_type, license_plate, is_active)

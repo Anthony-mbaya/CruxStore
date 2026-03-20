@@ -19,7 +19,7 @@ $loggedInUserId = $_SESSION['user_id'] ?? null;
 $accessQuery = "
     SELECT d.*, 
            o.customer_id AS order_customer_id, 
-           o.order_id, 
+           o.order_id, o.delivery_address,
            u.username AS customer_name, 
            u.phone AS customer_phone,
            dl.vehicle_type, 
@@ -111,6 +111,23 @@ ob_start();
                     <?php endif; ?>
 
                     <p>Address:<br><?= nl2br(htmlspecialchars($delivery['delivery_address'])) ?></p>
+
+                    <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">Map Legend</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="badge bg-success">●</span> Pickup Point
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge bg-danger">●</span> Destination
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge bg-primary">●</span> Deliverer Location
+                    </div>
+                </div>
+            </div>
                 </div>
             </div>
         </div>

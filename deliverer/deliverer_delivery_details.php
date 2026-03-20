@@ -3,10 +3,12 @@ require_once '../includes/db.php';
 require_once '../includes/auth.php';
 redirectIfNotAuthorized('deliverer');
 
+/*
 if (!isset($_GET['id']) {
     header("Location: deliverer_dashboard.php");
     exit();
 }
+*/
 
 $deliveryId = $_GET['id'];
 
@@ -89,7 +91,7 @@ $content = '
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <h6>Pickup Location</h6>
-                            <p>Nakuru CBD</p>
+                            <p>Thika, Naivas [STORE302]</p>
                         </div>
                         <div class="col-md-6">
                             <h6>Destination</h6>
@@ -152,8 +154,10 @@ $content = '
     </div>
 </div>
 
+
 <script>
-// Initialize map (you'll need to add your map API key)
+
+Initialize map (you"ll need to add your map API key)
 function initMap() {
     const pickup = { lat: -1.04684, lng: 37.08591 };
     const destination = { lat: '.$delivery['destination_latitude'].', lng: '.$delivery['destination_longitude'].' };
@@ -169,7 +173,7 @@ function initMap() {
     // Add route if you have DirectionsService enabled
 }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>';
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>'; 
 
 include '../includes/main_template.php';
 ?>
