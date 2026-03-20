@@ -173,9 +173,6 @@ $content = '
                     <div class="mb-2">
                         <span class="badge bg-primary">●</span> Your Current Location
                     </div>
-                    <div class="mb-2">
-                        <span style="color: #ff6b6b;">━━━</span> Path Traveled
-                    </div>
                 </div>
             </div>
         </div>
