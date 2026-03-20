@@ -46,6 +46,8 @@ foreach ($products as $product) {
 // Handle order submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     $delivery_address = trim($_POST['delivery_address']);
+    $latitude = $_POST['latitude'] ?? null;
+    $longitude = $_POST['longitude'] ?? null;
     $notes = trim($_POST['notes']);
     $payment_method = $_POST['payment_method'];
     $mpesa_phone = $_POST['mpesa_phone'] ?? null;
@@ -55,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
         // Create order
         $stmt = $pdo->prepare("INSERT INTO orders
-            (customer_id, total_amount, delivery_address, notes)
-            VALUES (?, ?, ?, ?)");
-        $stmt->execute([$_SESSION['user_id'], $total, $delivery_address, $notes]);
+            (customer_id, total_amount, delivery_address, delivery_latitude, delivery_longitude, notes )
+            VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$_SESSION['user_id'], $total, $delivery_address, $latitude, $longitude, $notes]);
         $order_id = $pdo->lastInsertId();
 
         // Add order items
@@ -101,6 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     }
 }
 
+$stmt = $pdo->query("SELECT * FROM delivery_stations ORDER BY name ASC");
+$stations = $stmt->fetchAll();
+$stationOptions = '';
+
+foreach ($stations as $station) {
+    $stationOptions .= '
+        <option 
+            value="'.$station['station_id'].'"
+            data-lat="'.$station['latitude'].'"
+            data-lng="'.$station['longitude'].'"
+            data-name="'.htmlspecialchars($station['name']).'"
+        >
+            '.htmlspecialchars($station['name']).'
+        </option>
+    ';
+}
+
 $content = '
 <div class="container py-3">
     <div class="row">
@@ -126,9 +145,18 @@ $content = '
                             <input type="tel" class="form-control" value="'.htmlspecialchars($customer['phone']).'" readonly>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Delivery Address</label>
-                            <textarea class="form-control" name="delivery_address" rows="6" required></textarea>
+                            <label class="form-label">Select Pickup Station</label>
+
+                            <select class="form-select" id="stationSelect" name="station_id" required>
+                                <option value="">-- Select Station --</option>
+                                '.$stationOptions.'
+                            </select>
                         </div>
+
+                        <input type="hidden" name="delivery_address" id="delivery_address">
+                        <input type="hidden" name="latitude" id="latitude">
+                        <input type="hidden" name="longitude" id="longitude">
+
                         <div class="mb-3">
                             <label class="form-label">Order Notes (Optional)</label>
                             <textarea class="form-control" name="notes" rows="4"></textarea>
@@ -187,7 +215,18 @@ $content = '
             </div>
         </div>
     </div>
-</div>';
+</div>
+
+<script>
+document.getElementById("stationSelect").addEventListener("change", function() {
+    const selected = this.options[this.selectedIndex];
+
+    document.getElementById("delivery_address").value = selected.dataset.name || "";
+    document.getElementById("latitude").value = selected.dataset.lat || "";
+    document.getElementById("longitude").value = selected.dataset.lng || "";
+});
+</script>
+';
 
 include '../includes/main_template.php';
 ?>

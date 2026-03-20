@@ -145,6 +145,14 @@ try {
         )
     ");
 
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS delivery_stations (
+            station_id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255),
+            latitude DECIMAL(10,8),
+            longitude DECIMAL(11,8)
+)");
+
 } catch (PDOException $e) {
     die("Database setup failed: " . $e->getMessage());
 }

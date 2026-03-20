@@ -10,10 +10,21 @@ if (!isAdmin()) {
 $pageTitle = "Create Delivery";
 $error = "";
 
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_delivery'])) {
 
     $order_id = $_POST['order_id'];
+    //get delivary dest lat and longitude
+    $stmt = $pdo->prepare("
+        SELECT delivery_latitude, delivery_longitude 
+        FROM orders 
+        WHERE order_id = ?
+    ");
+    $stmt->execute([$order_id]);
+    $order = $stmt->fetch();
+
+
     $deliverer_id = !empty($_POST['deliverer_id']) ? $_POST['deliverer_id'] : NULL;
     $estimated_delivery_time = !empty($_POST['estimated_delivery_time']) ? $_POST['estimated_delivery_time'] : NULL;
 
@@ -21,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_delivery'])) {
 
     $stmt = $pdo->prepare("
         INSERT INTO deliveries 
-        (order_id, deliverer_id, status, estimated_delivery_time, created_at, updated_at)
-        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        (order_id, deliverer_id, pickup_latitude, pickup_longitude, destination_latitude, destination_longitude, status, estimated_delivery_time, created_at, updated_at)
+        VALUES (?, ?, '-1.03448700', '37.07300800', ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     ");
 
-    if ($stmt->execute([$order_id, $deliverer_id, $status, $estimated_delivery_time])) {
+    if ($stmt->execute([$order_id, $deliverer_id, $order['delivery_latitude'], $order['delivery_longitude'], $status, $estimated_delivery_time])) {
         header("Location: deliveries.php?created=1");
         exit();
     } else {
