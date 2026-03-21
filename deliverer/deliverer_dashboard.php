@@ -39,7 +39,7 @@ $isActive = $stmt->fetchColumn();
 $content = '
 <div class="container py-4">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 mb-3">
             <h2 class="mb-4">Active Deliveries</h2>
             
             '.((empty($activeDeliveries)) ? '
@@ -72,7 +72,7 @@ $content = '
             </div>').'
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-4 gap-4">
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Quick Actions</h5>
