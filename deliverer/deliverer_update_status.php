@@ -71,7 +71,7 @@ $pageTitle = "Update Delivery Status";
 
 $content = '
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
         <h2>Update Delivery Status</h2>
         <a href="deliverer_delivery_details.php?id='.$deliveryId.'" class="btn btn-outline-secondary">Back to Details</a>
     </div>

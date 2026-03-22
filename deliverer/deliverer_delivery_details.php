@@ -58,29 +58,38 @@ $content = '
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">Order Items</h5>
                 </div>
-                <div class="card-body">
-                    <div class="list-group">
-                        '.array_reduce($items, function($carry, $item) {
-                            return $carry.'
-                            <div class="list-group-item">
-                                <div class="d-flex">
-                                    <img src="../'.htmlspecialchars($item['image_url']).'" alt="'.htmlspecialchars($item['name']).'" 
-                                         class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: cover;">
-                                    <div>
-                                        <h6>'.htmlspecialchars($item['name']).'</h6>
-                                        <div class="d-flex justify-content-between">
-                                            <span>Qty: '.$item['quantity'].'</span>
-                                            <span>KSh '.number_format($item['unit_price'], 2).' each</span>
-                                        </div>
-                                        <div class="text-end fw-bold">
-                                            KSh '.number_format($item['quantity'] * $item['unit_price'], 2).'
-                                        </div>
+
+                 <div class="card-body">
+                <div class="list-group">
+                    '.array_reduce($items, function($carry, $item) {
+                        return $carry.'
+                        <div class="list-group-item">
+                            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+
+                                <img src="../'.htmlspecialchars($item['image_url']).'" 
+                                    alt="'.htmlspecialchars($item['name']).'" 
+                                    class="img-thumbnail mb-2 mb-md-0 me-md-3"
+                                    style="width: 80px; height: 80px; object-fit: cover;">
+
+                                <div class="w-100">
+                                    <h6 class="mb-1">'.htmlspecialchars($item['name']).'</h6>
+
+                                    <div class="d-flex flex-column flex-md-row justify-content-between small text-muted">
+                                        <span>Qty: '.$item['quantity'].'</span>
+                                        <span>KSh '.number_format($item['unit_price'], 2).' each</span>
+                                    </div>
+
+                                    <div class="text-md-end fw-bold mt-1">
+                                        KSh '.number_format($item['quantity'] * $item['unit_price'], 2).'
                                     </div>
                                 </div>
-                            </div>';
-                        }, '').'
-                    </div>
+
+                            </div>
+                        </div>';
+                    }, '').'
                 </div>
+            </div>
+
             </div>
             
             <div class="card mb-4">
@@ -99,7 +108,7 @@ $content = '
                         </div>
                     </div>
                     
-                    <div id="map" style="height: 300px; width: 100%;" class="mb-3"></div>
+                    <div id="map" style="height: 93px; width: 100%;" class="mb-3"></div>
                     
                     <div class="alert alert-info">
                         <strong>Customer Notes:</strong> '.($delivery['notes'] ? htmlspecialchars($delivery['notes']) : 'None').'
