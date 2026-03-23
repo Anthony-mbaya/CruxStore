@@ -30,7 +30,7 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
-    $pathData = isset($_POST['path_data']) ? $_POST['path_data'] : '';
+    //$pathData = isset($_POST['path_data']) ? $_POST['path_data'] : '';
     
     try {
         // Update all active deliveries with this location and path
@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 d.current_longitude = ?, 
                 d.updated_at = NOW()
             WHERE dv.user_id = ?
+            AND d.status IN ('assigned','picked_up','in_transit')
         ");
         $stmt->execute([$latitude, $longitude, $_SESSION['user_id']]);
         // Return JSON response for AJAX calls
@@ -77,12 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Add path_data column to deliveries table if it doesn't exist
-try {
-    $pdo->exec("ALTER TABLE deliveries ADD COLUMN IF NOT EXISTS path_data TEXT");
-} catch (PDOException $e) {
-    // Column might already exist, ignore error
-}
+
 
 $content = '
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -102,7 +98,6 @@ $content = '
                             </div>
                             <input type="hidden" id="latitude" name="latitude">
                             <input type="hidden" id="longitude" name="longitude">
-                            <input type="hidden" id="pathData" name="path_data">
                             <input type="hidden" name="ajax" value="1">
                         </div>
                         
@@ -247,6 +242,41 @@ function sendLocation() {
 document.getElementById("toggleTracking").addEventListener("click", function () {
     isTracking = !isTracking;
 
+    // Save state in localStorage
+    localStorage.setItem("isTracking", isTracking ? "true" : "false");
+
+    this.textContent = isTracking ? "Stop Tracking" : "Start Tracking";
+    this.className = isTracking ? "btn btn-warning" : "btn btn-secondary";
+
+    if (isTracking) {
+        startTracking();
+    }else{
+        if (!isTracking && watchId !== null) {
+            navigator.geolocation.clearWatch(watchId);
+        }
+    }
+});
+let watchId = null;
+
+function startTracking() {
+    if (!navigator.geolocation) return;
+
+    watchId = navigator.geolocation.watchPosition(pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        updateMap(lat, lng);
+        updateForm(lat, lng);
+        sendLocation();
+
+    }, err => console.log(err), {
+        enableHighAccuracy: true
+    });
+}
+/*
+document.getElementById("toggleTracking").addEventListener("click", function () {
+    isTracking = !isTracking;
+
     this.textContent = isTracking ? "Stop Tracking" : "Start Tracking";
     this.className = isTracking ? "btn btn-warning" : "btn btn-secondary";
 
@@ -258,11 +288,12 @@ document.getElementById("toggleTracking").addEventListener("click", function () 
             updateMap(lat, lng);
             updateForm(lat, lng);
             sendLocation();
+            
 
         }, err => console.log(err), { enableHighAccuracy: true });
     }
 });
-
+*/
 // Manual submit
 document.getElementById("locationForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -270,7 +301,25 @@ document.getElementById("locationForm").addEventListener("submit", function(e) {
     alert("Location updated");
 });
 
-document.addEventListener("DOMContentLoaded", initMap);
+//document.addEventListener("DOMContentLoaded", initMap);
+document.addEventListener("DOMContentLoaded", function () {
+    initMap();
+
+    // Restore tracking state
+    const savedState = localStorage.getItem("isTracking");
+
+    if (savedState === "true") {
+        isTracking = true;
+
+        const btn = document.getElementById("toggleTracking");
+        btn.textContent = "Stop Tracking";
+        btn.className = "btn btn-warning";
+
+        setTimeout(() => {
+            startTracking();
+        }, 1000);
+    }
+});
 </script>';
 
 include '../includes/main_template.php';
