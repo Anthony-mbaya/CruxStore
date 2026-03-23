@@ -9,7 +9,7 @@ $pageTitle = "Update My Location";
 $activeDelivery = null;
 try {
     $stmt = $pdo->prepare("
-        SELECT d.*, o.delivery_address, u.username as customer_name
+        SELECT d.*, o.delivery_address, u.username as customer_name,u.phone
         FROM deliveries d
         JOIN orders o ON d.order_id = o.order_id
         JOIN users u ON o.customer_id = u.user_id
@@ -30,7 +30,7 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
-    //$pathData = isset($_POST['path_data']) ? $_POST['path_data'] : '';
+    $pathData = isset($_POST['path_data']) ? $_POST['path_data'] : '';
     
     try {
         // Update all active deliveries with this location and path
@@ -51,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             JOIN deliverers dv ON d.deliverer_id = dv.deliverer_id
             SET d.current_latitude = ?, 
                 d.current_longitude = ?, 
+                 d.path_data = COALESCE(NULLIF(?, ''), d.path_data),
                 d.updated_at = NOW()
             WHERE dv.user_id = ?
-            AND d.status IN ('assigned','picked_up','in_transit')
         ");
-        $stmt->execute([$latitude, $longitude, $_SESSION['user_id']]);
+        $stmt->execute([$latitude, $longitude, $pathData, $_SESSION['user_id']]);
         // Return JSON response for AJAX calls
         if (isset($_POST['ajax'])) {
             header('Content-Type: application/json');
@@ -78,7 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
+// Add path_data column to deliveries table if it doesn't exist
+try {
+    $pdo->exec("ALTER TABLE deliveries ADD COLUMN IF NOT EXISTS path_data TEXT");
+} catch (PDOException $e) {
+    // Column might already exist, ignore error
+}
 
 $content = '
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -98,6 +103,7 @@ $content = '
                             </div>
                             <input type="hidden" id="latitude" name="latitude">
                             <input type="hidden" id="longitude" name="longitude">
+                            <input type="hidden" id="pathData" name="path_data">
                             <input type="hidden" name="ajax" value="1">
                         </div>
                         
@@ -127,6 +133,10 @@ $content = '
                         <strong>Customer:</strong> ' . htmlspecialchars($activeDelivery['customer_name']) . '
                     </div>
                     <div class="mb-3">
+                        <strong>Customer Number:</strong> ' . htmlspecialchars($activeDelivery['phone']) . '
+                    </div>
+                    <div class="mb-2"> <strong>Distance Traveled:</strong> <span id="distanceTraveled">0 km</span> </div> <div class="mb-2"> <strong>Estimated Distance to Destination:</strong> <span id="distanceToDestination">Calculating...</span> </div>
+                    <div class="mb-3">
                         <strong>Status:</strong> 
                         <span class="badge bg-' . 
                         ($activeDelivery['status'] === 'assigned' ? 'warning' : 
@@ -138,14 +148,7 @@ $content = '
                         <strong>Delivery Address:</strong><br>
                         ' . nl2br(htmlspecialchars($activeDelivery['delivery_address'])) . '
                     </div>
-                    <div id="deliveryStats" class="mt-3">
-                        <div class="mb-2">
-                            <strong>Distance Traveled:</strong> <span id="distanceTraveled">0 km</span>
-                        </div>
-                        <div class="mb-2">
-                            <strong>Estimated Distance to Destination:</strong> <span id="distanceToDestination">Calculating...</span>
-                        </div>
-                    </div>
+                    
                     ' : '
                     <div class="alert alert-warning">
                         No active delivery found. Please check your dashboard for available deliveries.
@@ -173,11 +176,33 @@ $content = '
         </div>
     </div>
 </div>
-
+<script>
+const activeDelivery = ' . json_encode($activeDelivery) . ';
+</script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
+
+
 let map, marker;
 let isTracking = false;
+let pathLine = null;
+let lastLat = null;
+let lastLong = null;
+
+
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371; // km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+
+    const a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI/180) *
+        Math.cos(lat2 * Math.PI/180) *
+        Math.sin(dLng/2) * Math.sin(dLng/2);
+
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
 
 function initMap() {
     map = L.map("map").setView([0, 0], 2);
@@ -210,7 +235,7 @@ function getLocation() {
         document.getElementById("locationStatus").className = "alert alert-danger";
     });
 }
-
+/*
 function updateMap(lat, lng) {
     if (marker) {
         marker.setLatLng([lat, lng]);
@@ -221,14 +246,98 @@ function updateMap(lat, lng) {
 
     map.setView([lat, lng], 15);
 }
+*/
+let pickupMarker, destinationMarker;
 
+
+function updateMap(lat, lng) {
+    // Current location marker
+    if (marker) {
+        marker.setLatLng([lat, lng]);
+    } else {
+        marker = L.marker([lat, lng]).addTo(map)
+            .bindPopup("You are here").openPopup();
+    }
+    //colored icons
+    function coloredIcon(color) {
+        return new L.Icon({
+            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+            shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+    }
+    // Pickup & Destination markers (only if delivery exists)
+    if (activeDelivery) {
+
+        // Pickup
+        if (!pickupMarker && activeDelivery.pickup_latitude && activeDelivery.pickup_longitude) {
+            pickupMarker = L.marker([
+                activeDelivery.pickup_latitude,
+                activeDelivery.pickup_longitude
+            ], { title: "Pickup Point", icon: coloredIcon("green")})
+            .addTo(map)
+            .bindPopup("Pickup Location");
+        }
+
+        // Destination
+        if (!destinationMarker && activeDelivery.destination_latitude && activeDelivery.destination_longitude) {
+            destinationMarker = L.marker([
+                activeDelivery.destination_latitude,
+                activeDelivery.destination_longitude
+            ], { 
+                title: "Destination",
+                icon: coloredIcon("red")
+            })
+            .addTo(map)
+            .bindPopup("Destination");
+        }
+    }
+
+    
+
+    // Draw path
+    if (activeDelivery) {
+
+        const destLat = activeDelivery.destination_latitude;
+        const destLng = activeDelivery.destination_longitude;
+        const pickLat =  activeDelivery.pickup_latitude;
+        const pickLong = activeDelivery.pickup_longitude;
+
+        if (destLat && destLng) {
+
+            const route = [
+                [pickLat, pickLong],
+                [destLat, destLng]
+            ];
+
+            if (pathLine) {
+                pathLine.setLatLngs(route);
+            } else {
+                pathLine = L.polyline(route, {
+                    color: "green",
+                    weight: 4
+                }).addTo(map);
+            }
+        }
+    }
+        //map.fitBounds(L.latLngBounds(path));
+        map.setView([lat, lng], 13);
+}
+    
 function updateForm(lat, lng) {
     document.getElementById("latitude").value = lat;
     document.getElementById("longitude").value = lng;
     document.getElementById("submitBtn").disabled = false;
 }
 
+
 function sendLocation() {
+    const lat = document.getElementById("latitude").value;
+    const lng = document.getElementById("longitude").value;
+
     const form = document.getElementById("locationForm");
     const data = new FormData(form);
 
@@ -242,41 +351,6 @@ function sendLocation() {
 document.getElementById("toggleTracking").addEventListener("click", function () {
     isTracking = !isTracking;
 
-    // Save state in localStorage
-    localStorage.setItem("isTracking", isTracking ? "true" : "false");
-
-    this.textContent = isTracking ? "Stop Tracking" : "Start Tracking";
-    this.className = isTracking ? "btn btn-warning" : "btn btn-secondary";
-
-    if (isTracking) {
-        startTracking();
-    }else{
-        if (!isTracking && watchId !== null) {
-            navigator.geolocation.clearWatch(watchId);
-        }
-    }
-});
-let watchId = null;
-
-function startTracking() {
-    if (!navigator.geolocation) return;
-
-    watchId = navigator.geolocation.watchPosition(pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        updateMap(lat, lng);
-        updateForm(lat, lng);
-        sendLocation();
-
-    }, err => console.log(err), {
-        enableHighAccuracy: true
-    });
-}
-/*
-document.getElementById("toggleTracking").addEventListener("click", function () {
-    isTracking = !isTracking;
-
     this.textContent = isTracking ? "Stop Tracking" : "Start Tracking";
     this.className = isTracking ? "btn btn-warning" : "btn btn-secondary";
 
@@ -287,13 +361,34 @@ document.getElementById("toggleTracking").addEventListener("click", function () 
 
             updateMap(lat, lng);
             updateForm(lat, lng);
+
+            if (lastLat !== null && lastLng !== null) {
+                const dist = calculateDistance(lastLat, lastLng, lat, lng);
+                totalDistance += dist;
+
+                document.getElementById("distanceTraveled").innerText =
+                    totalDistance.toFixed(2) + " km";
+            }
+
+            lastLat = lat;
+            lastLng = lng;
+
+            const destLat = activeDelivery.destination_latitude;
+            const destLng = activeDelivery.destination_longitude;
+            if (activeDelivery) {
+                const remaining = calculateDistance(lat, lng, destLat, destLng);
+
+                document.getElementById("distanceToDestination").innerText =
+                    remaining.toFixed(2) + " km";
+            }
+
             sendLocation();
-            
 
         }, err => console.log(err), { enableHighAccuracy: true });
     }
 });
-*/
+
+
 // Manual submit
 document.getElementById("locationForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -301,25 +396,7 @@ document.getElementById("locationForm").addEventListener("submit", function(e) {
     alert("Location updated");
 });
 
-//document.addEventListener("DOMContentLoaded", initMap);
-document.addEventListener("DOMContentLoaded", function () {
-    initMap();
-
-    // Restore tracking state
-    const savedState = localStorage.getItem("isTracking");
-
-    if (savedState === "true") {
-        isTracking = true;
-
-        const btn = document.getElementById("toggleTracking");
-        btn.textContent = "Stop Tracking";
-        btn.className = "btn btn-warning";
-
-        setTimeout(() => {
-            startTracking();
-        }, 1000);
-    }
-});
+document.addEventListener("DOMContentLoaded", initMap);
 </script>';
 
 include '../includes/main_template.php';
