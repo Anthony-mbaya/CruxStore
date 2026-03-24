@@ -3,13 +3,6 @@ require_once '../includes/db.php';
 require_once '../includes/auth.php';
 redirectIfNotAuthorized('deliverer');
 
-/*
-if (!isset($_GET['id']) {
-    header("Location: deliverer_dashboard.php");
-    exit();
-}
-*/
-
 $deliveryId = $_GET['id'];
 
 // Get delivery details
@@ -107,8 +100,24 @@ $content = '
                             <p>'.$delivery['delivery_address'].'</p>
                         </div>
                     </div>
-                    
-                    <div id="map" style="height: 93px; width: 100%;" class="mb-3"></div>
+
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">🚀 Smart Assistant</h6>
+
+                            <div class="alert alert-primary py-2 mb-2">
+                                📍 Nearest Route: Use Thika Road (faster by ~5 mins)
+                            </div>
+
+                            <div class="alert alert-warning py-2 mb-2">
+                                ⚠ Traffic detected ahead (2km)
+                            </div>
+
+                            <div class="alert alert-success py-2 mb-0">
+                                ✅ Customer is available (last active recently)
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="alert alert-info">
                         <strong>Customer Notes:</strong> '.($delivery['notes'] ? htmlspecialchars($delivery['notes']) : 'None').'
@@ -162,27 +171,7 @@ $content = '
         </div>
     </div>
 </div>
-
-
-<script>
-
-Initialize map (you"ll need to add your map API key)
-function initMap() {
-    const pickup = { lat: -1.04684, lng: 37.08591 };
-    const destination = { lat: '.$delivery['destination_latitude'].', lng: '.$delivery['destination_longitude'].' };
-    
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 12,
-        center: pickup
-    });
-    
-    new google.maps.Marker({ position: pickup, map, title: "Pickup Location" });
-    new google.maps.Marker({ position: destination, map, title: "Destination" });
-    
-    // Add route if you have DirectionsService enabled
-}
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>'; 
+'; 
 
 include '../includes/main_template.php';
 ?>

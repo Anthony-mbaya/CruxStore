@@ -47,18 +47,16 @@ $content = '
         <div class="card-header">
             <h5>Order Information</h5>
         </div>
-        <div class="card-body">
-            <p><strong>Order ID:</strong> #' . $order['order_id'] . '</p>
-            <p><strong>Customer:</strong> ' . htmlspecialchars($order['username']) . '</p>
-            <p><strong>Email:</strong> ' . htmlspecialchars($order['email']) . '</p>
-            <p><strong>Date:</strong> ' . date('M j, Y', strtotime($order['order_date'])) . '</p>
-            <p><strong>Status:</strong> ' . ucfirst($order['status']) . '</p>
-            <p><strong>Payment Status:</strong> ' . ucfirst($order['payment_status']) . '</p>
-            <p><strong>Total Amount:</strong> ' . number_format($order['total_amount'], 2) . '</p>
+            <div class="card-body">
+                <p><strong>Order ID:</strong> #' . $order['order_id'] . '</p>
+                <p><strong>Customer:</strong> ' . htmlspecialchars($order['username']) . '</p>
+                <p><strong>Email:</strong> ' . htmlspecialchars($order['email']) . '</p>
+                <p><strong>Date:</strong> ' . date('M j, Y', strtotime($order['order_date'])) . '</p>
+                <p><strong>Status:</strong> ' . ucfirst($order['status']) . '</p>
+                <p><strong>Payment Status:</strong> ' . ucfirst($order['payment_status']) . '</p>
+                <p><strong>Total Amount:</strong> ' . number_format($order['total_amount'], 2) . '</p>
+            </div>
         </div>
-    </div>
-
-
             <a href="orders_page.php" class="btn btn-secondary mt-3">Back to Orders</a>
         </div>
     </div>

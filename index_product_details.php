@@ -1,12 +1,12 @@
 <?php
-require_once '../includes/db.php';
-require_once '../includes/auth.php';
-
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
+/*
 if (!isCustomer()) {
     header("Location: ../login.php");
     exit();
 }
-
+*/
 $product_id = $_GET['id'] ?? 0;
 $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id = ?");
 $stmt->execute([$product_id]);
@@ -65,7 +65,7 @@ $content = '
 
         <!-- IMAGE -->
         <div class="col-12 col-md-6 text-center">
-            <img src="../'.htmlspecialchars($product['image_url']).'"
+            <img src="'.htmlspecialchars($product['image_url']).'"
                  class="img-fluid rounded-4 shadow-sm"
                  alt="'.htmlspecialchars($product['name']).'"
                  style="max-height: 400px; object-fit: cover;">
@@ -89,33 +89,10 @@ $content = '
                 '.nl2br(htmlspecialchars($product['description'])).'
             </p>
 
-            <!-- ADD TO CART -->
-            <form method="POST" class="mt-4">
-                <div class="row g-2 align-items-center">
-                    <div class="col-4 col-md-3">
-                        <input type="number" 
-                               id="quantity" 
-                               name="quantity" 
-                               min="1" 
-                               max="'.min($product['stock_quantity'], 10).'" 
-                               value="1" 
-                               class="form-control rounded-3">
-                    </div>
-                    <div class="col-8 col-md-6 d-grid">
-                        <button type="submit" 
-                                name="add_to_cart" 
-                                class="btn btn-primary rounded-3"
-                                '.($product['stock_quantity'] <= 0 ? 'disabled' : '').'>
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-            </form>
 
             <!-- ACTIONS -->
             <div class="mt-4 d-flex gap-2 flex-wrap">
-                <a href="client_home.php" class="btn btn-outline-secondary rounded-3">Back</a>
-                <a href="cart.php" class="btn btn-outline-primary rounded-3">View Cart</a>
+                <a href="login.php" class="btn btn-outline-primary rounded-3">Login to proceed</a>
             </div>
 
         </div>
@@ -130,7 +107,7 @@ $content = '
             return $carry.'
             <div class="col">
                 <div class="card h-100 shadow-sm">
-                    <img src="../'.htmlspecialchars($item['image_url']).'" 
+                    <img src="'.htmlspecialchars($item['image_url']).'" 
                          class="card-img-top" 
                          style="height: 180px; object-fit: cover;">
                     <div class="card-body p-2">
@@ -152,5 +129,5 @@ $content = '
 
 </div> ';
 
-include '../includes/main_template.php';
+include 'includes/main_template.php';
 ?>

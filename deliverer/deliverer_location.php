@@ -34,18 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     try {
         // Update all active deliveries with this location and path
-        /*$stmt = $pdo->prepare("
-            UPDATE deliveries 
-            SET current_latitude = ?, current_longitude = ?, 
-                path_data = COALESCE(NULLIF(?, ''), path_data),
-                updated_at = NOW()
-            WHERE deliverer_id = (
-                SELECT deliverer_id FROM deliverers WHERE user_id = ?
-            )
-            AND status IN ('assigned', 'picked_up', 'in_transit')
-        ");
-        $stmt->execute([$latitude, $longitude, $pathData, $_SESSION['user_id']]);
-        */
         $stmt = $pdo->prepare("
             UPDATE deliveries d
             JOIN deliverers dv ON d.deliverer_id = dv.deliverer_id
@@ -181,8 +169,6 @@ const activeDelivery = ' . json_encode($activeDelivery) . ';
 </script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-
-
 let map, marker;
 let isTracking = false;
 let pathLine = null;

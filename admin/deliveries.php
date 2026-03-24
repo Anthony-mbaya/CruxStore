@@ -9,7 +9,7 @@ if (!isAdmin()) {
 
 $pageTitle = "Deliveries Management";
 
-// Handle status updates
+// hstatus updates
 if ($_POST && isset($_POST['update_status'])) {
     $deliveryId = $_POST['delivery_id'];
     $newStatus = $_POST['status'];
@@ -27,7 +27,7 @@ if ($_POST && isset($_POST['update_status'])) {
     exit();
 }
 
-// Handle deliverer assignment
+// deliverer assignment
 if ($_POST && isset($_POST['assign_deliverer'])) {
     $deliveryId = $_POST['delivery_id'];
     $delivererId = $_POST['deliverer_id'];

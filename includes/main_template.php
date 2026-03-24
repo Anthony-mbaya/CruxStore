@@ -80,7 +80,7 @@ require_once 'auth.php';
 </nav>
 
 <!-- MAIN CONTENT -->
-<div class="container" style="margin-top: 90px;">
+<div style="margin-top: 60px;">
     <div class="bg-white p-3 p-md-4 rounded-4 shadow-sm">
 
         <?php if (isset($_SESSION['message'])): ?>

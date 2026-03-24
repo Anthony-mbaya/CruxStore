@@ -10,11 +10,11 @@ if (!isAdmin()) {
 $pageTitle = "Create Delivery";
 $error = "";
 
-
-// Handle form submission
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_delivery'])) {
 
     $order_id = $_POST['order_id'];
+
     //get delivary dest lat and longitude
     $stmt = $pdo->prepare("
         SELECT delivery_latitude, delivery_longitude 
@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_delivery'])) {
     ");
     $stmt->execute([$order_id]);
     $order = $stmt->fetch();
-
 
     $deliverer_id = !empty($_POST['deliverer_id']) ? $_POST['deliverer_id'] : NULL;
     $estimated_delivery_time = !empty($_POST['estimated_delivery_time']) ? $_POST['estimated_delivery_time'] : NULL;
@@ -54,7 +53,7 @@ $orders = $pdo->query("
     ORDER BY o.order_date DESC
 ")->fetchAll();
 
-// Fetch available deliverers
+// Fetch available and active deliverers 
 $deliverers = $pdo->query("
     SELECT del.deliverer_id, u.username, del.vehicle_type, del.is_active
     FROM deliverers del

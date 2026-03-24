@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Invalid username or password!";
     }
 }
-
+/*
 $content = '
 <div class="row justify-content-center py-5">
     <div class="col-md-6">
@@ -62,6 +62,97 @@ $content = '
     </div>
 </div>
 ';
+*/
+$content = '
+<div class="row justify-content-center align-items-center" style="min-height: screen;">
+    <div class="col-md-5 col-lg-4">
+        <div class="card border-0" style="
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        ">
 
+            <div class="card-body p-4 p-md-5">
+
+                <div class="mb-4">
+                    <h3 class="fw-bold mb-1" style="letter-spacing:-0.5px;">Welcome back</h3>
+                    <p class="text-muted small mb-0">Login to continue</p>
+                </div>
+
+                ' . ($error ? '<div class="alert alert-danger small py-2 border-0" style="border-radius:10px;">' . $error . '</div>' : '') . '
+
+                <form method="POST">
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Username</label>
+                        <input type="text" class="form-control modern-input" id="username" name="username" placeholder="anthony_mbaya" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Password</label>
+                        <input type="password" class="form-control modern-input" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3 small">
+                        <div>
+                            <input type="checkbox" id="remember" class="form-check-input me-1">
+                            <label for="remember" class="text-muted">Remember me</label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn modern-btn">
+                            Login →
+                        </button>
+                    </div>
+
+                </form>
+
+                <div class="text-center mt-4 small">
+                    <span class="text-muted">Don\'t have an account?</span>
+                    <a href="register.php" class="fw-semibold text-decoration-none">Register</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.modern-input {
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.modern-input:focus {
+    background: #fff;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+}
+
+.modern-btn {
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border: none;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.modern-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(99,102,241,0.25);
+}
+
+.card:hover {
+    transition: 0.3s ease;
+}
+</style>
+';
 include 'includes/main_template.php';
 ?>

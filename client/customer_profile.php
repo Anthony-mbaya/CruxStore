@@ -9,12 +9,12 @@ if (!isCustomer()) {
 
 $pageTitle = "My Profile";
 
-// ✅ GET USER DATA
+// get user data
 $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
-// ✅ HANDLE UPDATE
+// handle UPDATE
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 
     $username = trim($_POST['username']);
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 }
 
-// ✅ HANDLE DELETE ACCOUNT
+// delete accnt
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_account'])) {
 
     try {
@@ -87,11 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_account'])) {
 
 $content = '
 <div class="container py-4">
-
     <h2 class="mb-4">My Profile</h2>
-
     '.(isset($error) ? '<div class="alert alert-danger">'.$error.'</div>' : '').'
-
     <div class="row">
 
         <!-- PROFILE INFO -->

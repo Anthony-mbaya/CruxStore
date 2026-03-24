@@ -9,7 +9,7 @@ if (!isAdmin()) {
 
 $pageTitle = "Customers";
 
-// ✅ HANDLE PROMOTION
+// promotion to deliverer
 if (isset($_GET['promote'])) {
 
     $user_id = (int) $_GET['promote'];
@@ -17,11 +17,11 @@ if (isset($_GET['promote'])) {
     try {
         $pdo->beginTransaction();
 
-        // 1. Update role
+        // pdate role
         $stmt = $pdo->prepare("UPDATE users SET role = 'deliverer' WHERE user_id = ?");
         $stmt->execute([$user_id]);
 
-        // 2. Insert into deliverers table (avoid duplicate)
+        // nsert into deliverers table (avoid duplicate)
         $stmt = $pdo->prepare("
             INSERT INTO deliverers (user_id, vehicle_type, license_plate, is_active)
             VALUES (?, '', '', 1)
@@ -44,7 +44,7 @@ if (isset($_GET['promote'])) {
     exit();
 }
 
-// ✅ FETCH CUSTOMERS ONLY
+// fetch customers
 $customers = $pdo->query("
     SELECT user_id, username, email, phone, created_at
     FROM users

@@ -9,15 +9,15 @@ if (!isAdmin()) {
 
 $pageTitle = "Admin Dashboard";
 
-// Get stats
-$productsCount = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
-$ordersCount = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
-$customersCount = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'customer'")->fetchColumn();
-$deliveriesCount = $pdo->query("SELECT COUNT(*) FROM deliveries")->fetchColumn();
+$productsCount = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn(); // get productse
+$ordersCount = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn(); // get orders
+$customersCount = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'customer'")->fetchColumn(); // get customers
+$deliveriesCount = $pdo->query("SELECT COUNT(*) FROM deliveries")->fetchColumn(); // get deliveries
 
 // Get active deliveries count
 $activeDeliveriesCount = $pdo->query("SELECT COUNT(*) FROM deliveries WHERE status IN ('assigned', 'picked_up', 'in_transit')")->fetchColumn();
 
+// recent orders
 $recentOrders = $pdo->query("SELECT o.order_id, o.total_amount, o.status, u.username
                              FROM orders o JOIN users u ON o.customer_id = u.user_id
                              ORDER BY o.order_date DESC LIMIT 5")->fetchAll();
@@ -32,7 +32,7 @@ $recentDeliveries = $pdo->query("SELECT d.delivery_id, d.status, o.order_id, u.u
                                  ORDER BY d.created_at DESC LIMIT 5")->fetchAll();
 
 $content = '
-<div class="container">
+<div class="">
     <h2 class="my-4">Admin Dashboard</h2>
 
     <!-- Stats Cards -->

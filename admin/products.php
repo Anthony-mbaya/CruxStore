@@ -18,10 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
     $category = trim($_POST['category']);
     $stock_quantity = trim($_POST['stock_quantity']);
     $price = trim($_POST['price']);
-    //image handled below
-    //$image_url = trim($_POST['image_url']);
-
-    //shouuld created image in assests/oimages/products
+    
     // Handle image upload
     $image_url = '';
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
